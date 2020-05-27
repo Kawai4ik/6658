@@ -1,0 +1,43 @@
+const http = require('http');
+const url = require('url');
+ constport = 6566;
+
+const requestHandler = (request, response) => {
+
+    const query = url.parse(request.url, true).query;
+
+    if (query && query.count && (query.count > 0)) {
+
+        let apiObjects = [
+            {name: "Северсталь"},
+            {name2: "Спартак"},
+            {title: "Последние игры", max: "6"},
+            {score: "0:2"},
+            {date: "15", month: "Сентябрь"}
+        ];
+
+        let limit = query.count;
+        if (limit > apiObjects.length) {
+            limit = apiObjects.length;
+        }
+
+        apiObjects = apiObjects.slice(0, limit);
+        response.end(JSON.stringify(apiObjects));
+
+    } else {
+
+        response.writeHead(404);
+        response.end("Not Found");
+    }
+};
+
+const server = http.createServer(requestHandler);
+
+server.listen(port, (err) => {
+
+    if (err) {
+        return console.log(`Internal Server Error: ${err}`);
+    }
+
+    console.log(`Listening on port: ${port}`);
+});
